@@ -180,5 +180,5 @@ if st.session_state.show_results:
 st.divider()
 
 st.caption(
-    "*Based on a synthetic dataset of 5,000 running shoe listings."
+    "*Based on a synthetic dataset of 2,515 running shoe listings."
 )
