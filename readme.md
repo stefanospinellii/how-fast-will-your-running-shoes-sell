@@ -1,7 +1,5 @@
 # 🏃‍♂️ Running Shoe Marketplace Liquidity Optimizer
 
-https://how-fast-will-your-running-shoes-sell-2n9cvszw5fdfzh4yzelhmu.streamlit.app/
-
 A marketplace optimization tool that estimates how long second-hand running shoes may take to sell and provides actionable recommendations to reduce sale time.
 
 ## Project Overview
