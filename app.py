@@ -97,7 +97,7 @@ def estimate_market_price(brand, condition):
 
 def estimate_days(price, market_price, photos):
     price_gap_pct = (price - market_price) / market_price
-    days = 18 + price_gap_pct * 35 - photos * 0.6
+    days = 19.7 + 26.2 * price_gap_pct - 0.46 * photos
     return max(3, days)
 
 
