@@ -74,8 +74,8 @@ The dataset includes:
 
 Current dataset statistics:
 
-* Listings: ~5,000
-* Sold rate: ~53.7%
+* Listings: 5,000
+* Sold rate: 53.7%
 * Average days to sell: ~18 days
 
 ## Synthetic Data Generation Logic
