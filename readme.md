@@ -2,32 +2,13 @@
 
 Live demo: https://how-fast-will-your-running-shoes-sell-2n9cvszw5fdfzh4yzelhmu.streamlit.app/
 
-This is a marketplace optimization tool that estimates how long a second-hand running shoe listing may take to sell, and recommends actionable steps to sell faster.
-
 ## Project Overview
 
-The idea originated from a common marketplace problem:
+This is a marketplace optimization tool that estimates how long a second-hand running shoe listing may take to sell, and recommends actionable steps to sell faster.
 
-> Sellers often have no way to understand whether their listing is competitively priced or how long it may take to sell.
+The idea originated from a common marketplace problem: how long will it take to sell my item, and what can I do to make it sell faster?
 
-Most marketplace tools focus on predicting whether an item will sell.
-
-This project instead focuses on a more practical question:
-
-> How long will it take to sell, and what can I do to make it sell faster?
-
-The project evolved from a machine learning experiment into a product-design exercise.
-
-The initial goal was to predict time-to-sell using a Random Forest model trained on a synthetic marketplace dataset. During development, however, the project shifted focus toward creating a recommendation engine capable of delivering intuitive and actionable feedback to users.
-
-The final application combines marketplace simulation, machine learning insights and product design principles to help sellers optimise their listings.
-
-The system then:
-
-1. Estimates expected sale time
-2. Simulates potential listing improvements
-3. Quantifies the expected reduction in sale time
-4. Helps sellers optimise their listing through iterative recommendations
+This project tryies to anwser these questions thanks to a Random Forest model trained on a synthetic marketplace dataset to identify the main drivers of time-to-sell. These insights were then translated into a simpler formula-based recommendation engine, which powers the final tool and gives users clear, actionable suggestions.
 
 Example:
 
@@ -47,7 +28,7 @@ Potential improvement:
 
 ## Dataset
 
-A synthetic dataset containing approximately 5,000 running shoe listings was created.
+A synthetic dataset containing 5,000 running shoe listings was created.
 
 A real dataset would have been preferable, but publicly available marketplace datasets typically contain product information and prices without providing the actual time elapsed between listing publication and sale.
 
