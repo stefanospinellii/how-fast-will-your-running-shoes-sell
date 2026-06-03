@@ -1,4 +1,4 @@
-# 🏃‍♂️ Running Shoe Marketplace Liquidity Optimizer
+# Running Shoe Marketplace Liquidity Optimizer
 
 Live demo: https://how-fast-will-your-running-shoes-sell-2n9cvszw5fdfzh4yzelhmu.streamlit.app/
 
