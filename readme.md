@@ -4,7 +4,7 @@ Live demo: https://how-fast-will-your-running-shoes-sell-2n9cvszw5fdfzh4yzelhmu.
 
 ## Project Overview
 
-This is a marketplace optimization tool that estimates how long a second-hand running shoe listing may take to sell, and recommends actionable steps to sell faster.
+This is a marketplace optimization tool that estimates how long a second-hand running shoe listing may take to sell, and gives smart suggestions to sell faster.
 
 The idea originated from a common marketplace problem: how long will it take to sell my item, and what can I do to make it sell faster?
 
