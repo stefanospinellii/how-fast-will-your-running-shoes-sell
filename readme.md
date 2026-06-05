@@ -8,7 +8,9 @@ This is a marketplace optimization tool that estimates how long a second-hand ru
 
 The idea originated from a common marketplace problem: how long will it take to sell my item, and what can I do to make it sell faster?
 
-This project tryies to anwser these questions thanks to a Random Forest model trained on a synthetic marketplace dataset to identify the main drivers of time-to-sell. These insights were then translated into a simpler formula-based recommendation engine, which powers the final tool and gives users clear, actionable suggestions.
+This project tryies to anwser these questions thanks to a Random Forest model trained on a synthetic marketplace dataset to identify the main drivers of time-to-sell. 
+
+These insights were then translated into a simpler formula-based recommendation engine, which powers the final tool and gives users clear, actionable suggestions.
 
 Example:
 
