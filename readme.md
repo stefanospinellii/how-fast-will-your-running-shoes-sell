@@ -32,7 +32,7 @@ Potential improvement:
 
 A synthetic dataset containing 5,000 running shoe listings was created.
 
-A real dataset would have been preferable, but publicly available marketplace datasets typically contain product information and prices without providing the actual time elapsed between listing publication and sale.
+A real dataset would have been preferable, but publicly available marketplace datasets didn't contain the actual time elapsed between listing publication and sale.
 
 Since the project's objective was to predict time-to-sell, a synthetic environment was built to simulate marketplace behaviour.
 
@@ -58,8 +58,15 @@ The dataset includes:
 Current dataset statistics:
 
 * Listings: 5,000
-* Sold rate: 53.7%
-* Average days to sell: ~18 days
+* Sold: 2,515
+* Sold rate: 50.3%
+* Average days to sell: 17.9 days
+* Brands: 10
+* Models: 40
+* Average listing price: €72.4
+* Price range: €5–215
+* Average seller rating: 4.24/5
+* Average photos per listing: 5.3
 
 ## Synthetic Data Generation Logic
 
@@ -212,17 +219,19 @@ days_to_sell
 
 using the synthetic marketplace dataset.
 
+Only sold listings (2,515 observations) were used for training, as unsold listings do not have an observable time-to-sell target.
+
 Performance:
 
 ```text
 R² ≈ 0.78
 ```
 
-The model successfully captured the relationships embedded in the synthetic marketplace environment and was used to validate the dataset generation logic.
+The model surfaced which variables most strongly drive marketplace liquidity among completed transactions. 
 
-More importantly, it helped identify which variables had the greatest impact on marketplace liquidity.
+Since it was trained exclusively on sold listings, it does not capture the probability of a listing going unsold. 
 
-The machine learning phase provided confidence that the synthetic marketplace assumptions were internally consistent and produced realistic behaviour.
+This approach remains useful because it isolates the factors that drive sale speed when a transaction does occur, with pricing relative to market value emerging as the dominant driver.
 
 ## What Drives Sale Speed?
 
