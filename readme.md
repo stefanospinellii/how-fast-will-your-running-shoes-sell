@@ -217,21 +217,16 @@ A Random Forest Regressor was trained to predict:
 days_to_sell
 ```
 
-using the synthetic marketplace dataset.
-
-Only sold listings (2,515 observations) were used for training, as unsold listings do not have an observable time-to-sell target.
+Only sold listings (2,515 observations) were used for training, since a regressor predicting a number of days needs a known sale time, which unsold listings do not have. This is a limitation of the chosen model, not of the data, and the approach that uses the unsold listings is described in Future Improvements.
 
 Performance:
 
 ```text
 R² ≈ 0.78
 ```
+Since the model is trained exclusively on sold listings, it never observes those that have not yet sold. This produces a survivorship bias, where the model estimates time to sale conditional on a sale occurring, rather than the likelihood and timing of a sale overall.
 
-The model surfaced which variables most strongly drive marketplace liquidity among completed transactions. 
-
-Since it was trained exclusively on sold listings, it does not capture the probability of a listing going unsold. 
-
-This approach remains useful because it isolates the factors that drive sale speed when a transaction does occur, with pricing relative to market value emerging as the dominant driver.
+The practical consequence is that the estimates may be optimistic. Listings that sell slowly or not at all are underrepresented in training, so real sale times could run longer than predicted. The model still retains value, as it isolates the drivers of sale speed among completed transactions, with price relative to market value as the dominant factor.
 
 ## What Drives Sale Speed?
 
@@ -429,14 +424,83 @@ The final outcome was not simply a machine learning model, but a marketplace opt
 
 ## Future Improvements
 
-Potential future enhancements include:
+The main methodological improvement would be to include unsold listings in the modelling process instead of training only on sold listings.
 
-* Real marketplace data collection
-* Market-value estimation model
-* Listing description analysis
-* Image quality scoring
-* More advanced recommendation logic
-* Dynamic pricing recommendations
-* Marketplace-specific calibration
+In the current version, only sold listings are used because they have a complete `days_to_sell` value. This creates survivorship bias: the model learns only from listings that converted and ignores listings that stayed online without selling.
 
-The long-term vision is to explore how marketplaces could proactively improve liquidity by helping sellers optimise listings before publication.
+The fix would be to treat the task as a survival analysis problem.
+
+The dataset would be structured using two fields:
+
+```text
+time = number of days observed
+event = 1 if the listing sold, 0 if the listing is still unsold
+```
+
+Example:
+
+| Listing |                     Status | time | event |
+| ------- | -------------------------: | ---: | ----: |
+| A       |         Sold after 12 days |   12 |     1 |
+| B       |         Sold after 25 days |   25 |     1 |
+| C       | Still unsold after 40 days |   40 |     0 |
+| D       | Still unsold after 70 days |   70 |     0 |
+
+Unsold listings are not treated as if they sold after 40 or 70 days. They are treated as censored observations, meaning the model only knows that they remained unsold for at least that long.
+
+The model would then combine both types of information:
+
+* Sold listings tell the model when sales actually happened.
+* Unsold listings tell the model how long similar listings can remain online without selling.
+
+From this, the model estimates a survival curve, which represents the probability that a listing is still unsold after each number of days.
+
+Example output for a listing:
+
+| Day | Probability still unsold |
+| --: | -----------------------: |
+|   7 |                      85% |
+|  14 |                      60% |
+|  21 |                      50% |
+|  31 |                      40% |
+|  60 |                      25% |
+
+The user-facing estimate would be derived from this curve.
+
+For example:
+
+| Probability threshold | Interpretation             | Day |
+| --------------------- | -------------------------- | --: |
+| 40% sold              | Early expected sale point  |  14 |
+| 50% sold              | Median expected sale point |  21 |
+| 60% sold              | Later expected sale point  |  31 |
+
+This could be displayed as:
+
+```text
+Estimated sale range: 2-4 weeks
+```
+
+If the survival curve is much flatter, the app would avoid giving a misleading short estimate.
+
+Example:
+
+| Day | Probability still unsold |
+| --: | -----------------------: |
+|  30 |                      90% |
+|  60 |                      82% |
+|  90 |                      75% |
+
+In this case, the app could show:
+
+```text
+Low liquidity listing. Unlikely to sell quickly under current conditions.
+```
+
+This would be more realistic than forcing every listing into a short time-to-sell prediction.
+
+This approach would improve the project because it uses both sold and unsold listings, reduces survivorship bias, and allows the application to distinguish between listings that are likely to sell slowly and listings that may not sell at all.
+
+Further enhancements include collecting real marketplace data, building a market value estimation model, analysing listing descriptions, scoring image quality, refining the recommendation logic, adding dynamic pricing, and calibrating the model for specific marketplaces.
+
+The long-term vision is to help sellers optimise listings before publication, allowing marketplaces to proactively improve liquidity.
