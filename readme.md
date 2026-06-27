@@ -426,11 +426,7 @@ The final outcome was not simply a machine learning model, but a marketplace opt
 
 The main methodological improvement would be to reformulate the task as a survival analysis problem, allowing both sold and unsold listings to contribute to the prediction.
 
-In the current version, only sold listings are used because they have a complete `days_to_sell` value. This creates survivorship bias, in other words, the model learns only from listings that converted and ignores listings that stayed online without selling.
-
-In the current version, only sold listings are used because they have a complete `days_to_sell` value. This creates survivorship bias: the model learns only from listings that converted and ignores listings that stayed online without selling.
-
-The fix would be to treat the task as a survival analysis problem.
+In the current version, only sold listings are used because they have a complete `days_to_sell` value. This creates survivorship bias, meaning the model learns only from listings that converted and ignores listings that stayed online without selling.
 
 The dataset would be structured using two fields:
 
@@ -448,14 +444,35 @@ Example:
 | C       | Still unsold after 40 days |   40 |     0 |
 | D       | Still unsold after 70 days |   70 |     0 |
 
-Unsold listings are not treated as if they sold after 40 or 70 days. They are treated as censored observations, meaning the model only knows that they remained unsold for at least that long.
+Unsold listings would not be treated as if they sold after 40 or 70 days. They would be treated as censored observations, meaning the model only knows that they remained unsold for at least that long.
+
+Suppose a new listing has the following characteristics:
+
+- Hoka Clifton 9
+- Very Good condition
+- 25% above estimated market value
+- 4 photos
+- Seller with 10 reviews
+- Listed in Spring
+
+Instead of comparing it only with listings that eventually sold, the model would also learn from similar listings that remained unsold.
+
+For example:
+
+| Listing | Days observed | Sold |
+| ------- | ------------: | :--: |
+| A       |            14 |  ✓   |
+| B       |            22 |  ✓   |
+| C       |            41 |  ✗   |
+| D       |            67 |  ✗   |
+| E       |            18 |  ✓   |
 
 The model would then combine both types of information:
 
-* Sold listings tell the model when sales actually happened.
-* Unsold listings tell the model how long similar listings can remain online without selling.
+- Sold listings tell the model when sales actually happened.
+- Unsold listings tell the model how long similar listings can remain online without selling.
 
-From this, the model estimates a survival curve, which represents the probability that a listing is still unsold after each number of days.
+From this, the model would estimate the probability that a listing remains unsold over time. The application could then convert that probability into a user-facing sale-time range.
 
 Example output for a listing:
 
@@ -467,15 +484,15 @@ Example output for a listing:
 |  31 |                      40% |
 |  60 |                      25% |
 
-The user-facing estimate would be derived from this curve.
+The user-facing estimate could then be derived from the central part of the predicted sale-time distribution, for example using the interquartile range (25th to 75th percentile).
 
 For example:
 
-| Probability threshold | Interpretation             | Day |
-| --------------------- | -------------------------- | --: |
-| 40% sold              | Early expected sale point  |  14 |
-| 50% sold              | Median expected sale point |  21 |
-| 60% sold              | Later expected sale point  |  31 |
+| Probability of sale |             Interpretation | Day |
+| ------------------: | -------------------------: | --: |
+|                25% |  Early expected sale point |  14 |
+|                50% | Median expected sale point |  21 |
+|                75% |  Later expected sale point |  31 |
 
 This could be displayed as:
 
@@ -483,7 +500,7 @@ This could be displayed as:
 Estimated sale range: 2-4 weeks
 ```
 
-If the survival curve is much flatter, the app would avoid giving a misleading short estimate.
+If the predicted probability of sale remains low over time, the app would avoid showing an unrealistically short estimate.
 
 Example:
 
@@ -496,12 +513,14 @@ Example:
 In this case, the app could show:
 
 ```text
-Low liquidity listing. Unlikely to sell quickly under current conditions.
+Listing improvement recommended.
+
+Similar listings usually need stronger pricing or better presentation to sell within a reasonable time.
 ```
 
-This would be more realistic than forcing every listing into a short time-to-sell prediction.
+This would be more realistic than forcing every listing into a short time-to-sell prediction, while still encouraging the seller to improve the listing rather than abandon it.
 
-This approach would improve the project because it uses both sold and unsold listings, reduces survivorship bias, and allows the application to distinguish between listings that are likely to sell slowly and listings that may not sell at all.
+This approach would not remove the modelling component. It would replace the current regression setup with a survival modelling approach better suited to the business question. Instead of predicting a single `days_to_sell` value, the model would estimate the probability of sale over time using both sold and unsold listings.
 
 Further enhancements include collecting real marketplace data, building a market value estimation model, analysing listing descriptions, scoring image quality, refining the recommendation logic, adding dynamic pricing, and calibrating the model for specific marketplaces.
 
