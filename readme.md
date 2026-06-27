@@ -424,7 +424,9 @@ The final outcome was not simply a machine learning model, but a marketplace opt
 
 ## Future Improvements
 
-The main methodological improvement would be to include unsold listings in the modelling process instead of training only on sold listings.
+The main methodological improvement would be to reformulate the task as a survival analysis problem, allowing both sold and unsold listings to contribute to the prediction.
+
+In the current version, only sold listings are used because they have a complete `days_to_sell` value. This creates survivorship bias, in other words, the model learns only from listings that converted and ignores listings that stayed online without selling.
 
 In the current version, only sold listings are used because they have a complete `days_to_sell` value. This creates survivorship bias: the model learns only from listings that converted and ignores listings that stayed online without selling.
 
